@@ -1,7 +1,9 @@
 //svg container
 var svg = d3.select("body")
     .append("svg")
-    .attr("width", "100%");
+    .attr("width", "100%")
+    .attr("height", "200px")
+    .style("border", "1px solid black");;
 
 //circles
 var circles = svg
@@ -10,8 +12,8 @@ var circles = svg
     .enter()
     .append("circle");
 var circleAttr = circles
-    .attr("cx", function(d,i) {
-        var xpos = (i * 10 + 5)*2;
+    .attr("cx", function(d, i) {
+        var xpos = (i * 10 + 5) * 2;
         return xpos;
     })
     .attr("cy", 25)
@@ -20,13 +22,13 @@ var circleAttr = circles
     })
     .style("fill", "green");
 
-//visualizing data
+//showing data
 d3.select("body")
-    .selectAll("p")
-    .data(data)
-    .enter()
-    .append("span")
-    .text(function(d) {
-        return d;
-    })
-    .style("padding-left", "1em");
+    .append("div")
+    .text(function() {
+        var d2show = "Data: ";
+        for (var i = 0; i < data.length; i++) {
+            d2show += data[i] + " ";
+        }
+        return d2show;
+    });
