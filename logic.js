@@ -10,13 +10,13 @@ var circles = svg
     .enter()
     .append("circle");
 var circleAttr = circles
-    .attr("cx", function(i) {
-        var xpos = i * 10 + 5;
-        return xpos*2;
+    .attr("cx", function(d,i) {
+        var xpos = (i * 10 + 5)*2;
+        return xpos;
     })
     .attr("cy", 25)
     .attr("r", function(d) {
-        return d*2;
+        return d;
     })
     .style("fill", "green");
 
