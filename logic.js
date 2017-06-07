@@ -44,20 +44,22 @@ var svgHeight = svgWidth / 1.5;
 svgGraph.attr("width", svgWidth - 15 + "px");
 svgWidth -= 15;
 svgGraph.attr("height", svgHeight + "px");
-// svgGraph.style("border", "1px solid black");
+var xoffset = 10;
+var yoffset = 10;
 
 //x-axis
 var x_axis = svgGraph.append("g");
+x_axis.attr("id", "x_axis");
 x_axis.append("line")
-    .attr("x1", 10)
-    .attr("y1", svgHeight - 10)
-    .attr("x2", svgWidth - 10)
-    .attr("y2", svgHeight - 10)
+    .attr("x1", xoffset)
+    .attr("y1", svgHeight - yoffset)
+    .attr("x2", svgWidth - xoffset)
+    .attr("y2", svgHeight - yoffset)
     .style("stroke", "black").style("stroke-width", 1);
 x_axis.append("polyline")
     .attr("points", function() {
-        var pointx = svgWidth - 10;
-        var pointy = svgHeight - 10;
+        var pointx = svgWidth - xoffset;
+        var pointy = svgHeight - yoffset;
         return (pointx - 7) + "," + (pointy - 7) + " " + pointx + "," + pointy + " " + (pointx - 7) + "," + (pointy + 7);
     })
     .attr("fill", "none")
@@ -65,17 +67,46 @@ x_axis.append("polyline")
 
 //y-axis
 var y_axis = svgGraph.append("g");
+y_axis.attr("id", "y_axis");
 y_axis.append("line")
-    .attr("x1", 10)
-    .attr("y1", 10)
-    .attr("x2", 10)
-    .attr("y2", svgHeight - 10)
+    .attr("x1", xoffset)
+    .attr("y1", yoffset)
+    .attr("x2", xoffset)
+    .attr("y2", svgHeight - yoffset)
     .style("stroke", "black").style("stroke-width", 1);
 y_axis.append("polyline")
     .attr("points", function() {
-        var pointx = 10;
-        var pointy = 10;
+        var pointx = xoffset;
+        var pointy = yoffset;
         return (pointx - 7) + "," + (pointy + 7) + " " + pointx + "," + pointy + " " + (pointx + 7) + "," + (pointy + 7);
     })
     .attr("fill", "none")
     .style("stroke", "black").style("stroke-width", 2);
+
+//Graph Points
+var plotArea = svgGraph.append("g");
+plotArea.attr("id", "plotArea");
+
+//Graph Functions
+function plotPoint(x, y, pointSize) {
+    if (pointSize === undefined) pointSize = 3;
+    var point = plotArea.append("circle");
+    point.attr("cx", x + xoffset);
+    point.attr("cy", svgHeight - y - yoffset);
+    point.attr("r", pointSize);
+    point.attr("fill", "black");
+}
+
+//plotting points from data
+function plotDataPoints() {
+    var maxY = data[0];
+    for (var i = 0; i < data.length; i++) {
+        if (data[i] > maxY) maxY = data[i];
+    }
+    var scaleX = (svgWidth - xoffset) / data.length;
+    var scaleY = (svgHeight - 2*yoffset) / maxY;
+    for (var i = 0; i < data.length; i++) {
+        plotPoint(i * scaleX, data[i] * scaleY);
+    }
+}
+plotDataPoints();
