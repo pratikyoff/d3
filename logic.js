@@ -40,23 +40,23 @@ var svgGraph = divDOM.append("svg");
 var svgWidth = 2000;
 var svgHeight = 1000;
 svgGraph.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight);
-svgWidth -= 15;
-var xoffset = 10;
-var yoffset = 10;
+svgGraph.style("border", "1px solid black");
+var x_axisOffset = 50;
+var y_axisOffset = 50;
 
 //x-axis
 var x_axis = svgGraph.append("g");
 x_axis.attr("id", "x_axis");
 x_axis.append("line")
-    .attr("x1", xoffset)
-    .attr("y1", svgHeight - yoffset)
-    .attr("x2", svgWidth - xoffset)
-    .attr("y2", svgHeight - yoffset)
+    .attr("x1", x_axisOffset)
+    .attr("y1", svgHeight - y_axisOffset)
+    .attr("x2", svgWidth - x_axisOffset)
+    .attr("y2", svgHeight - y_axisOffset)
     .style("stroke", "black").style("stroke-width", 1);
 x_axis.append("polyline")
     .attr("points", function() {
-        var pointx = svgWidth - xoffset;
-        var pointy = svgHeight - yoffset;
+        var pointx = svgWidth - x_axisOffset;
+        var pointy = svgHeight - y_axisOffset;
         return (pointx - 7) + "," + (pointy - 7) + " " + pointx + "," + pointy + " " + (pointx - 7) + "," + (pointy + 7);
     })
     .attr("fill", "none")
@@ -66,15 +66,15 @@ x_axis.append("polyline")
 var y_axis = svgGraph.append("g");
 y_axis.attr("id", "y_axis");
 y_axis.append("line")
-    .attr("x1", xoffset)
-    .attr("y1", yoffset)
-    .attr("x2", xoffset)
-    .attr("y2", svgHeight - yoffset)
+    .attr("x1", x_axisOffset)
+    .attr("y1", y_axisOffset)
+    .attr("x2", x_axisOffset)
+    .attr("y2", svgHeight - y_axisOffset)
     .style("stroke", "black").style("stroke-width", 1);
 y_axis.append("polyline")
     .attr("points", function() {
-        var pointx = xoffset;
-        var pointy = yoffset;
+        var pointx = x_axisOffset;
+        var pointy = y_axisOffset;
         return (pointx - 7) + "," + (pointy + 7) + " " + pointx + "," + pointy + " " + (pointx + 7) + "," + (pointy + 7);
     })
     .attr("fill", "none")
@@ -85,11 +85,13 @@ var plotArea = svgGraph.append("g");
 plotArea.attr("id", "plotArea");
 
 //Graph Functions
+
+//Plot a single point
 function plotPoint(x, y, pointSize) {
     if (pointSize === undefined) pointSize = 3;
     var point = plotArea.append("circle");
-    point.attr("cx", x + xoffset);
-    point.attr("cy", svgHeight - y - yoffset);
+    point.attr("cx", x + x_axisOffset);
+    point.attr("cy", svgHeight - y - y_axisOffset);
     point.attr("r", pointSize);
     point.attr("fill", "black");
 }
@@ -100,8 +102,8 @@ function plotDataPoints() {
     for (var i = 0; i < data.length; i++) {
         if (data[i] > maxY) maxY = data[i];
     }
-    var scaleX = (svgWidth - xoffset) / data.length;
-    var scaleY = (svgHeight - 2 * yoffset) / maxY;
+    var scaleX = (svgWidth - x_axisOffset) / data.length;
+    var scaleY = (svgHeight - 2 * y_axisOffset) / maxY;
     for (var i = 0; i < data.length; i++) {
         plotPoint(i * scaleX, data[i] * scaleY);
     }
