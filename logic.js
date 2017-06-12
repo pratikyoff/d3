@@ -1,8 +1,7 @@
 //svg container
 var svg = d3.select("body")
     .append("svg")
-    .attr("width", "100%")
-    .attr("height", "200px")
+    .attr("viewBox", "0 0 500 100")
     .style("border", "1px solid black");;
 
 //circles
@@ -38,12 +37,10 @@ d3.select("body")
 
 var divDOM = d3.select("body").select("div");
 var svgGraph = divDOM.append("svg");
-svgGraph.attr("width", "100%");
-var svgWidth = svgGraph.node().getBoundingClientRect().width;
-var svgHeight = svgWidth / 1.5;
-svgGraph.attr("width", svgWidth - 15 + "px");
+var svgWidth = 2000;
+var svgHeight = 1000;
+svgGraph.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight);
 svgWidth -= 15;
-svgGraph.attr("height", svgHeight + "px");
 var xoffset = 10;
 var yoffset = 10;
 
@@ -104,7 +101,7 @@ function plotDataPoints() {
         if (data[i] > maxY) maxY = data[i];
     }
     var scaleX = (svgWidth - xoffset) / data.length;
-    var scaleY = (svgHeight - 2*yoffset) / maxY;
+    var scaleY = (svgHeight - 2 * yoffset) / maxY;
     for (var i = 0; i < data.length; i++) {
         plotPoint(i * scaleX, data[i] * scaleY);
     }
