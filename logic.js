@@ -42,6 +42,9 @@ svgGraph.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight);
 svgGraph.style("border", "1px solid black");
 var x_axisOffset = 50;
 var y_axisOffset = 50;
+var noOfXMarkers = data.length;
+var noOfYMarkers = 10;
+var legendMarkerLength = 7;
 
 //x-axis
 var x_axis = svgGraph.append("g");
@@ -60,6 +63,24 @@ x_axis.append("polyline")
     })
     .attr("fill", "none")
     .style("stroke", "black").style("stroke-width", 1);
+var x_axisLegend = x_axis.append("g");
+for (var i = 1; i <= noOfXMarkers; i++) {
+    var xcor = x_axisOffset + i * 0.9 * (svgWidth - 2 * x_axisOffset) / noOfXMarkers;
+    x_axisLegend.append("line")
+        .attr("x1", xcor)
+        .attr("y1", svgHeight - y_axisOffset - legendMarkerLength)
+        .attr("x2", xcor)
+        .attr("y2", svgHeight - y_axisOffset + legendMarkerLength)
+        .style("stroke", "black").style("stroke-width", 2);
+    x_axisLegend.append("text")
+        .text(i * data.length / noOfXMarkers)
+        .attr("x", xcor)
+        .attr("y", svgHeight - y_axisOffset + 30)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "25px")
+        .attr("text-anchor", "middle")
+        .attr("fill", "black");
+}
 
 //y-axis
 var y_axis = svgGraph.append("g");
@@ -78,6 +99,24 @@ y_axis.append("polyline")
     })
     .attr("fill", "none")
     .style("stroke", "black").style("stroke-width", 1);
+var y_axisLegend = y_axis.append("g");
+for (var i = 1; i <= noOfXMarkers; i++) {
+    var ycor = svgHeight - y_axisOffset - i * 0.9 * (svgHeight - 2 * y_axisOffset) / noOfYMarkers;
+    y_axisLegend.append("line")
+        .attr("x1", x_axisOffset - legendMarkerLength)
+        .attr("y1", ycor)
+        .attr("x2", x_axisOffset + legendMarkerLength)
+        .attr("y2", ycor)
+        .style("stroke", "black").style("stroke-width", 2);
+    y_axisLegend.append("text")
+        .text(i * data.length / noOfYMarkers)
+        .attr("x", x_axisOffset - 30)
+        .attr("y", ycor)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "25px")
+        .attr("text-anchor", "middle")
+        .attr("fill", "black");
+}
 
 //Graph Points
 var plotArea = svgGraph.append("g");
