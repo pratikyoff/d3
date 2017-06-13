@@ -40,7 +40,7 @@ var svgWidth = 2000;
 var svgHeight = 1000;
 svgGraph.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight);
 svgGraph.style("border", "1px solid black");
-var x_axisOffset = 50;
+var x_axisOffset = 70;
 var y_axisOffset = 50;
 var noOfXMarkers = data.length;
 var noOfYMarkers = 10;
@@ -110,8 +110,8 @@ for (var i = 1; i <= noOfXMarkers; i++) {
         .style("stroke", "black").style("stroke-width", 2);
     y_axisLegend.append("text")
         .text(i * data.length / noOfYMarkers)
-        .attr("x", x_axisOffset - 30)
-        .attr("y", ycor)
+        .attr("x", x_axisOffset - 40)
+        .attr("y", ycor + 10)
         .attr("font-family", "sans-serif")
         .attr("font-size", "25px")
         .attr("text-anchor", "middle")
