@@ -32,8 +32,7 @@ d3.select("body")
         return d2show;
     });
 
-/////////////////////////////////////////////////
-//Graph
+///////////////Graph
 
 var divDOM = d3.select("body").select("div");
 var svgGraph = divDOM.append("svg");
