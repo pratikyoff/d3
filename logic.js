@@ -32,8 +32,7 @@ d3.select("body")
         return d2show;
     });
 
-/////////////////////////////////////////////////
-//Graph
+///////////////Graph
 
 var divDOM = d3.select("body").select("div");
 var svgGraph = divDOM.append("svg");
@@ -60,7 +59,7 @@ x_axis.append("polyline")
         return (pointx - 7) + "," + (pointy - 7) + " " + pointx + "," + pointy + " " + (pointx - 7) + "," + (pointy + 7);
     })
     .attr("fill", "none")
-    .style("stroke", "black").style("stroke-width", 2);
+    .style("stroke", "black").style("stroke-width", 1);
 
 //y-axis
 var y_axis = svgGraph.append("g");
@@ -78,7 +77,7 @@ y_axis.append("polyline")
         return (pointx - 7) + "," + (pointy + 7) + " " + pointx + "," + pointy + " " + (pointx + 7) + "," + (pointy + 7);
     })
     .attr("fill", "none")
-    .style("stroke", "black").style("stroke-width", 2);
+    .style("stroke", "black").style("stroke-width", 1);
 
 //Graph Points
 var plotArea = svgGraph.append("g");
@@ -102,8 +101,8 @@ function plotDataPoints() {
     for (var i = 0; i < data.length; i++) {
         if (data[i] > maxY) maxY = data[i];
     }
-    var scaleX = (svgWidth - x_axisOffset) / data.length;
-    var scaleY = (svgHeight - 2 * y_axisOffset) / maxY;
+    var scaleX = 0.9 * (svgWidth - 2 * x_axisOffset) / data.length;
+    var scaleY = 0.9 * (svgHeight - 2 * y_axisOffset) / maxY;
     for (var i = 0; i < data.length; i++) {
         plotPoint(i * scaleX, data[i] * scaleY);
     }
