@@ -1,1 +1,10 @@
-var graphLineColours = ["black", "blue", "green"];
+var svgWidth = 2000;
+var svgHeight = 1000;
+var x_axisOffset = 70;
+var y_axisOffset = 50;
+var legendMarkerLength = 7;
+var axisWidth = 4;
+var axisFontSize = 27 + "px";
+var graphLineColours = ["red", "blue", "green"];
+var helperLineColour = "#DCDCDC";
+var backgroundShadeColour = "#FEFEFE";
