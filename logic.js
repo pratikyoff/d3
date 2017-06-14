@@ -107,7 +107,7 @@ y_axis.append("polyline")
     .attr("fill", "none")
     .style("stroke", "black").style("stroke-width", 1);
 var y_axisLegend = y_axis.append("g");
-for (var i = 1; i <= noOfXMarkers; i++) {
+for (var i = 1; i <= noOfYMarkers; i++) {
     var ycor = svgHeight - y_axisOffset - i * 0.9 * (svgHeight - 2 * y_axisOffset) / noOfYMarkers;
     y_axisLegend.append("line")
         .attr("x1", x_axisOffset - legendMarkerLength)
