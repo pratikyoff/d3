@@ -1,6 +1,6 @@
 ///////////////Graph
 
-var divDOM = d3.select("body").select("div");
+var divDOM = d3.select("body").select("div#svg");
 var svgGraph = divDOM.append("svg");
 svgGraph.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight);
 var maxY = data[0][0];
