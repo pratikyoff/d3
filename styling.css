@@ -1,0 +1,8 @@
+@font-face {
+    font-family: svgFont;
+    src: url('external/OpenSans-Regular.ttf');
+}
+
+svg * {
+    font-family: svgFont;
+}
