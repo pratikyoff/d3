@@ -6,3 +6,7 @@
 svg * {
     font-family: svgFont;
 }
+
+svg {
+    max-height: 30em;
+}
