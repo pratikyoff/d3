@@ -133,12 +133,23 @@ plotArea.attr("id", "plotArea");
 
 //Plot a single point
 function plotPoint(x, y, pointSize) {
-    if (pointSize === undefined) pointSize = 3;
+    if (pointSize === undefined) pointSize = 4;
     var point = plotArea.append("circle");
     point.attr("cx", x + x_axisOffset);
     point.attr("cy", svgHeight - y - y_axisOffset);
     point.attr("r", pointSize);
     point.attr("fill", "black");
+}
+
+//Draw a line on graph
+function drawGraphLine(x1, y1, x2, y2, lineWidth) {
+    if (lineWidth === undefined) lineWidth = 1;
+    plotArea.append("line")
+        .attr("x1", x1 + x_axisOffset)
+        .attr("y1", svgHeight - y1 - y_axisOffset)
+        .attr("x2", x2 + x_axisOffset)
+        .attr("y2", svgHeight - y2 - y_axisOffset)
+        .style("stroke", "black").style("stroke-width", lineWidth);
 }
 
 //plotting points from data
@@ -147,6 +158,8 @@ function plotDataPoints() {
     var scaleY = 0.9 * (svgHeight - 2 * y_axisOffset) / maxY;
     for (var i = 0; i < data.length; i++) {
         plotPoint(i * scaleX, data[i] * scaleY);
+        if (i > 0)
+            drawGraphLine((i - 1) * scaleX, data[i - 1] * scaleY, i * scaleX, data[i] * scaleY);
     }
 }
 plotDataPoints();
