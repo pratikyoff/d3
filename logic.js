@@ -42,9 +42,16 @@ svgGraph.attr("viewBox", "0 0 " + svgWidth + " " + svgHeight);
 svgGraph.style("border", "1px solid black");
 var x_axisOffset = 70;
 var y_axisOffset = 50;
+
+var maxY = data[0];
+for (var i = 0; i < data.length; i++) {
+    if (data[i] > maxY) maxY = data[i];
+}
+
 var noOfXMarkers = data.length;
-var noOfYMarkers = 10;
+var noOfYMarkers = maxY;
 var legendMarkerLength = 7;
+
 
 //x-axis
 var x_axis = svgGraph.append("g");
@@ -109,7 +116,7 @@ for (var i = 1; i <= noOfXMarkers; i++) {
         .attr("y2", ycor)
         .style("stroke", "black").style("stroke-width", 2);
     y_axisLegend.append("text")
-        .text(i * data.length / noOfYMarkers)
+        .text(i * maxY / noOfYMarkers)
         .attr("x", x_axisOffset - 40)
         .attr("y", ycor + 10)
         .attr("font-family", "sans-serif")
@@ -136,10 +143,6 @@ function plotPoint(x, y, pointSize) {
 
 //plotting points from data
 function plotDataPoints() {
-    var maxY = data[0];
-    for (var i = 0; i < data.length; i++) {
-        if (data[i] > maxY) maxY = data[i];
-    }
     var scaleX = 0.9 * (svgWidth - 2 * x_axisOffset) / data.length;
     var scaleY = 0.9 * (svgHeight - 2 * y_axisOffset) / maxY;
     for (var i = 0; i < data.length; i++) {
