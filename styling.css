@@ -10,3 +10,15 @@ svg * {
 svg {
     max-height: 30em;
 }
+
+.inputLineColour {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+.inputLineText {
+    vertical-align: middle;
+}

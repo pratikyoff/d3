@@ -15,13 +15,10 @@ function addInputPlotLine(line) {
         .style("padding", "10px 10px 10px 10px");
     tempLineDiv.append("span")
         .style("background", graphLineColours[lineCounter % graphLineColours.length])
-        .style("width", "10px")
-        .style("height", "10px")
-        .style("display", "inline-block")
-        .style("border", "1px solid black")
-        .style("margin","5px");
+        .attr("class", "inputLineColour");
     var tempLineText = tempLineDiv.append("span")
         .attr("id", "line" + lineCounter + "text")
+        .attr("class", "inputLineText")
         .html("Line " + (lineCounter + 1));
     lineCounter++;
 }
