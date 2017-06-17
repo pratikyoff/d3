@@ -27,3 +27,8 @@ div#plotLines input {
     width: 30px;
     white-space: nowrap;
 }
+
+.addDelSymbol {
+    padding-left: 5px;
+    cursor: pointer;
+}

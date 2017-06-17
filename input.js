@@ -19,15 +19,41 @@ function addInputPlotLine(line) {
         .attr("id", "line" + lineCounter + "text")
         .attr("class", "inputLineText")
         .html("Line " + (lineCounter + 1));
-    var tempLineData = tempLineDiv.append("span");
+    var tempLineData = tempLineDiv.append("span")
+        .attr("id", "line" + lineCounter + "indivData");
     for (var i = 0; i < data[lineCounter].length; i++) {
         tempLineData.append("input")
             .attr("type", "number")
-            .attr("value", data[lineCounter][i]);
+            .attr("value", data[lineCounter][i])
+            .attr("onchange", "renderGraph()");
     }
-    tempLineData.append("span")
-        .html("&#x2795;&#x274c;");
+    tempLineDiv.append("span")
+        .html("&#x2795;")
+        .attr("class", "addDelSymbol")
+        .attr("onclick", "onLineDataAdd('add'," + lineCounter + ")");
+    tempLineDiv.append("span")
+        .html("&#x274c;")
+        .attr("class", "addDelSymbol")
+        .attr("onclick", "onLineDataAdd('del'," + lineCounter + ")");
     lineCounter++;
 }
 
 inititalizeData();
+
+function onLineDataAdd(addOrDel, lineNo, line) {
+    if (addOrDel === "add") {
+        data[lineNo].push(data[lineNo][data[lineNo].length - 1]);
+    }
+    if (addOrDel === "del") {
+        data[lineNo].length = data[lineNo].length - 1;
+    }
+    renderGraph();
+}
+
+function onLineDataChange() {
+
+}
+
+function onLineAdd() {
+
+}
