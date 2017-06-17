@@ -4,7 +4,6 @@ var lineCounter = 0;
 //initializing data
 function inititalizeData() {
     for (var i = 0; i < data.length; i++) {
-
         addInputPlotLine();
     }
 }
@@ -20,6 +19,14 @@ function addInputPlotLine(line) {
         .attr("id", "line" + lineCounter + "text")
         .attr("class", "inputLineText")
         .html("Line " + (lineCounter + 1));
+    var tempLineData = tempLineDiv.append("span");
+    for (var i = 0; i < data[lineCounter].length; i++) {
+        tempLineData.append("input")
+            .attr("type", "number")
+            .attr("value", data[lineCounter][i]);
+    }
+    tempLineData.append("span")
+        .html("&#x2795;&#x274c;");
     lineCounter++;
 }
 
