@@ -1,3 +1,14 @@
+d3.selection.prototype.first = function() {
+    return d3.select(this._groups[0][0]);
+};
+d3.selection.prototype.last = function() {
+    var last = this.size() - 1;
+    return d3.select(this._groups[0][last]);
+};
+d3.selection.prototype.elementAtIndex = function(index) {
+    return d3.select(this._groups[0][index]);
+};
+
 var inputDOM = d3.select("div#plotLines");
 var lineCounter = 0;
 
@@ -25,7 +36,7 @@ function addInputPlotLine(line) {
         tempLineData.append("input")
             .attr("type", "number")
             .attr("value", data[lineCounter][i])
-            .attr("onchange", "renderGraph()");
+            .attr("onchange", "onLineDataChange(" + lineCounter + "," + i + ")");
     }
     tempLineDiv.append("span")
         .html("&#x2795;")
@@ -40,18 +51,31 @@ function addInputPlotLine(line) {
 
 inititalizeData();
 
-function onLineDataAdd(addOrDel, lineNo, line) {
+function onLineDataAdd(addOrDel, lineNo) {
     if (addOrDel === "add") {
         data[lineNo].push(data[lineNo][data[lineNo].length - 1]);
+        inputDOM.select("span#line" + lineNo + "indivData")
+            .append("input")
+            .attr("type", "number")
+            .attr("value", data[lineNo][data[lineNo].length - 1])
+            .attr("onchange", "onLineDataChange(" + lineNo + "," + (data[lineNo].length - 1) + ")");
     }
     if (addOrDel === "del") {
         data[lineNo].length = data[lineNo].length - 1;
+        inputDOM.select("span#line" + lineNo + "indivData")
+            .selectAll("input")
+            .last()
+            .remove();
     }
     renderGraph();
 }
 
-function onLineDataChange() {
-
+function onLineDataChange(lineNo, indexInLine) {
+    data[lineNo][indexInLine] = inputDOM.select("span#line" + lineNo + "indivData")
+        .selectAll("input")
+        .elementAtIndex(indexInLine)
+        ._groups[0][0].value;
+    renderGraph();
 }
 
 function onLineAdd() {
