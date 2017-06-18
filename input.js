@@ -81,3 +81,21 @@ function onLineDataChange(lineNo, indexInLine) {
 function onLineAdd() {
 
 }
+
+function createRandomNumbers() {
+    var startPoint = 100;
+    var deviation = 30;
+    var positiveDisProb = 0.65;
+    var totalDataPoints = 100;
+
+    var finalData = [parseInt(Math.random() * startPoint)];
+    for (var i = 0; i < totalDataPoints; i++) {
+        var temp = 0;
+        if (i > 0) {
+            temp = parseInt(finalData[i - 1] + (Math.random() * deviation) * (Math.random() < positiveDisProb ? 1 : -1));
+            finalData.push(temp);
+        }
+    }
+    d3.select("body").append("div")
+        .html(finalData);
+}

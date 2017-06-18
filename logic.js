@@ -9,8 +9,8 @@ function renderGraph() {
     var maxY = data[0][0];
     var maxX = data[0].length;
     getMaxElements();
-    var noOfXMarkers = maxX;
-    var noOfYMarkers = maxY;
+    var noOfXMarkers = maxX > 15 ? 15 : maxX;
+    var noOfYMarkers = maxY > 10 ? 10 : maxY;
 
     //background shade
     svgGraph.append("rect")
@@ -53,7 +53,7 @@ function renderGraph() {
             .attr("y2", svgHeight - y_axisOffset + legendMarkerLength)
             .style("stroke", "black").style("stroke-width", 2);
         x_axisLegend.append("text")
-            .text(i * maxX / noOfXMarkers)
+            .text(Math.round((i * maxX / noOfXMarkers) * 100) / 100)
             .attr("x", xcor)
             .attr("y", svgHeight - y_axisOffset + 30)
             .attr("font-family", "sans-serif")
@@ -95,7 +95,7 @@ function renderGraph() {
             .attr("y2", ycor)
             .style("stroke", "black").style("stroke-width", 2);
         y_axisLegend.append("text")
-            .text(i * maxY / noOfYMarkers)
+            .text(Math.round((i * maxY / noOfYMarkers) * 100) / 100)
             .attr("x", x_axisOffset - 40)
             .attr("y", ycor + 10)
             .attr("font-family", "sans-serif")
@@ -122,8 +122,9 @@ function renderGraph() {
 
     //Plot a single point
     function plotPoint(x, y, pointSize, pointColour) {
-        if (pointSize === undefined) pointSize = 4;
+        if (pointSize === undefined) pointSize = 2.5;
         if (pointColour === undefined) pointColour = "black";
+        if (pointSize < 1) return;
         var point = plotArea.append("circle");
         point.attr("cx", x + x_axisOffset);
         point.attr("cy", svgHeight - y - y_axisOffset);
