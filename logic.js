@@ -1,6 +1,7 @@
 ///////////////Graph
 
 var divDOM = d3.select("body").select("div#svg");
+divDOM.style("border", "1px solid black");
 
 function renderGraph() {
     divDOM.selectAll("svg").remove();
@@ -14,89 +15,104 @@ function renderGraph() {
 
     //background shade
     svgGraph.append("rect")
-        .attr("x", x_axisOffset)
+        .attr("x", x_axisOffset + x_axisLegendTextOffset)
         .attr("y", y_axisOffset)
-        .attr("width", svgWidth - 2 * x_axisOffset)
-        .attr("height", svgHeight - 2 * y_axisOffset)
+        .attr("width", svgWidth - 2 * x_axisOffset - x_axisLegendTextOffset)
+        .attr("height", svgHeight - 2 * y_axisOffset - x_axisLegendTextOffset)
         .style("fill", backgroundShadeColour);
 
     //x-axis
     var x_axis = svgGraph.append("g");
     x_axis.attr("id", "x_axis");
+    var x_axisPoints = [
+        x_axisOffset + x_axisLegendTextOffset,
+        svgHeight - y_axisOffset - x_axisLegendTextOffset,
+        svgWidth - x_axisOffset - x_axisLegendTextOffset,
+        svgHeight - y_axisOffset - x_axisLegendTextOffset
+    ];
     x_axis.append("line")
-        .attr("x1", x_axisOffset)
-        .attr("y1", svgHeight - y_axisOffset)
-        .attr("x2", svgWidth - x_axisOffset)
-        .attr("y2", svgHeight - y_axisOffset)
+        .attr("x1", x_axisPoints[0])
+        .attr("y1", x_axisPoints[1])
+        .attr("x2", x_axisPoints[2])
+        .attr("y2", x_axisPoints[3])
         .style("stroke", "black").style("stroke-width", axisWidth);
     x_axis.append("polyline")
         .attr("points", function() {
-            var pointx = svgWidth - x_axisOffset;
-            var pointy = svgHeight - y_axisOffset;
+            var pointx = x_axisPoints[2];
+            var pointy = x_axisPoints[3];
             return (pointx - 7) + "," + (pointy - 7) + " " + pointx + "," + pointy + " " + (pointx - 7) + "," + (pointy + 7);
         })
         .attr("fill", "none")
         .style("stroke", "black").style("stroke-width", axisWidth);
     var x_axisLegend = x_axis.append("g");
     for (var i = 1; i <= noOfXMarkers; i++) {
-        var xcor = x_axisOffset + i * 0.9 * (svgWidth - 2 * x_axisOffset) / noOfXMarkers;
+        var xcor = x_axisPoints[0] + i * 0.9 * (x_axisPoints[2] - x_axisPoints[0]) / noOfXMarkers;
         x_axisLegend.append("line")
             .attr("x1", xcor)
-            .attr("y1", svgHeight - y_axisOffset)
+            .attr("y1", x_axisPoints[1])
             .attr("x2", xcor)
             .attr("y2", y_axisOffset)
             .style("stroke", helperLineColour).style("stroke-width", 1);
         x_axisLegend.append("line")
             .attr("x1", xcor)
-            .attr("y1", svgHeight - y_axisOffset - legendMarkerLength)
+            .attr("y1", x_axisPoints[1] - legendMarkerLength)
             .attr("x2", xcor)
-            .attr("y2", svgHeight - y_axisOffset + legendMarkerLength)
+            .attr("y2", x_axisPoints[1] + legendMarkerLength)
             .style("stroke", "black").style("stroke-width", 2);
         x_axisLegend.append("text")
             .text(Math.round((i * maxX / noOfXMarkers) * 100) / 100)
             .attr("x", xcor)
-            .attr("y", svgHeight - y_axisOffset + 30)
+            .attr("y", x_axisPoints[1] + 30)
             .attr("font-family", "sans-serif")
             .attr("font-size", axisFontSize)
             .attr("text-anchor", "middle")
             .attr("fill", "black");
     }
+    var x_axisLegendTextSvg = x_axis.append("g");
+    x_axisLegendTextSvg.append("text")
+        .html(x_axisLegendText);
 
     //y-axis
     var y_axis = svgGraph.append("g");
     y_axis.attr("id", "y_axis");
+    var y_axisPoints = [
+        x_axisOffset + x_axisLegendTextOffset,
+        svgHeight - y_axisOffset - x_axisLegendTextOffset,
+        x_axisOffset + x_axisLegendTextOffset,
+        y_axisOffset
+    ];
     y_axis.append("line")
-        .attr("x1", x_axisOffset)
-        .attr("y1", y_axisOffset)
-        .attr("x2", x_axisOffset)
-        .attr("y2", svgHeight - y_axisOffset)
+        .attr("x1", y_axisPoints[0])
+        .attr("y1", y_axisPoints[1])
+        .attr("x2", y_axisPoints[2])
+        .attr("y2", y_axisPoints[3])
         .style("stroke", "black").style("stroke-width", axisWidth);
     y_axis.append("polyline")
         .attr("points", function() {
-            var pointx = x_axisOffset;
-            var pointy = y_axisOffset;
+            var pointx = y_axisPoints[2];
+            var pointy = y_axisPoints[3];
             return (pointx - 7) + "," + (pointy + 7) + " " + pointx + "," + pointy + " " + (pointx + 7) + "," + (pointy + 7);
         })
         .attr("fill", "none")
         .style("stroke", "black").style("stroke-width", axisWidth);
     var y_axisLegend = y_axis.append("g");
     for (var i = 1; i <= noOfYMarkers; i++) {
-        var ycor = svgHeight - y_axisOffset - i * 0.9 * (svgHeight - 2 * y_axisOffset) / noOfYMarkers;
+        var ycor = y_axisPoints[1] - i * 0.9 * (y_axisPoints[1] - y_axisPoints[3]) / noOfYMarkers;
         y_axisLegend.append("line")
-            .attr("x1", x_axisOffset)
+            .attr("x1", y_axisPoints[0])
             .attr("y1", ycor)
             .attr("x2", svgWidth - x_axisOffset)
             .attr("y2", ycor)
             .style("stroke", helperLineColour).style("stroke-width", 1);
         y_axisLegend.append("line")
-            .attr("x1", x_axisOffset - legendMarkerLength)
+            .attr("x1", y_axisPoints[0] - legendMarkerLength)
             .attr("y1", ycor)
-            .attr("x2", x_axisOffset + legendMarkerLength)
+            .attr("x2", y_axisPoints[0] + legendMarkerLength)
             .attr("y2", ycor)
             .style("stroke", "black").style("stroke-width", 2);
         y_axisLegend.append("text")
             .text(Math.round((i * maxY / noOfYMarkers) * 100) / 100)
-            .attr("x", x_axisOffset - 40)
+            .attr("x", y_axisPoints[0] - 40)
             .attr("y", ycor + 10)
             .attr("font-family", "sans-serif")
             .attr("font-size", axisFontSize)
@@ -126,8 +142,8 @@ function renderGraph() {
         if (pointColour === undefined) pointColour = "black";
         if (pointSize < 1) return;
         var point = plotArea.append("circle");
-        point.attr("cx", x + x_axisOffset);
-        point.attr("cy", svgHeight - y - y_axisOffset);
+        point.attr("cx", x + x_axisPoints[0]);
+        point.attr("cy", x_axisPoints[1] - y);
         point.attr("r", pointSize);
         point.attr("fill", pointColour);
     }
@@ -137,10 +153,10 @@ function renderGraph() {
         if (lineWidth === undefined) lineWidth = 2;
         if (lineColour === undefined) lineColour = "black";
         plotArea.append("line")
-            .attr("x1", x1 + x_axisOffset)
-            .attr("y1", svgHeight - y1 - y_axisOffset)
-            .attr("x2", x2 + x_axisOffset)
-            .attr("y2", svgHeight - y2 - y_axisOffset)
+            .attr("x1", x1 + x_axisPoints[0])
+            .attr("y1", x_axisPoints[1] - y1)
+            .attr("x2", x2 + x_axisPoints[0])
+            .attr("y2", x_axisPoints[1] - y2)
             .style("stroke", lineColour).style("stroke-width", lineWidth);
     }
 
@@ -159,4 +175,5 @@ function renderGraph() {
     }
     plotDataPoints();
 }
+
 renderGraph();
