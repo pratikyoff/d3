@@ -1,7 +1,7 @@
 ///////////////Graph
 
 var divDOM = d3.select("body").select("div#svg");
-divDOM.style("border", "1px solid black");
+//divDOM.style("border", "1px solid black");
 
 function renderGraph() {
     divDOM.selectAll("svg").remove();
@@ -36,7 +36,8 @@ function renderGraph() {
         .attr("x2", x_axisPoints[2])
         .attr("y2", x_axisPoints[3])
         .style("stroke", "black").style("stroke-width", axisWidth);
-    x_axis.append("polyline")
+    if (axisArrows)
+        x_axis.append("polyline")
         .attr("points", function() {
             var pointx = x_axisPoints[2];
             var pointy = x_axisPoints[3];
@@ -70,7 +71,10 @@ function renderGraph() {
     }
     var x_axisLegendTextSvg = x_axis.append("g");
     x_axisLegendTextSvg.append("text")
-        .html(x_axisLegendText);
+        .text(x_axisLegendText)
+        .attr("x", (x_axisPoints[2] - x_axisPoints[0]) / 2)
+        .attr("y", x_axisPoints[1] + x_axisLegendTextOffset)
+        .attr("font-size", axisFontSize);
 
     //y-axis
     var y_axis = svgGraph.append("g");
@@ -87,7 +91,8 @@ function renderGraph() {
         .attr("x2", y_axisPoints[2])
         .attr("y2", y_axisPoints[3])
         .style("stroke", "black").style("stroke-width", axisWidth);
-    y_axis.append("polyline")
+    if (axisArrows)
+        y_axis.append("polyline")
         .attr("points", function() {
             var pointx = y_axisPoints[2];
             var pointy = y_axisPoints[3];
@@ -137,29 +142,76 @@ function renderGraph() {
     }
 
     //Plot a single point
-    function plotPoint(x, y, pointSize, pointColour) {
-        if (pointSize === undefined) pointSize = 2.5;
+    function plotPoint(x, y, pointColour, lineNo) {
         if (pointColour === undefined) pointColour = "black";
-        if (pointSize < 1) return;
-        var point = plotArea.append("circle");
+        if (defaultPointSize <= 0) return;
+        var linePointGroup = plotArea.select("g#linePtOf" + lineNo);
+        if (linePointGroup.empty())
+            linePointGroup = plotArea.append("g").attr("id", "linePtOf" + lineNo);
+        var point = linePointGroup.append("circle");
         point.attr("cx", x + x_axisPoints[0]);
         point.attr("cy", x_axisPoints[1] - y);
-        point.attr("r", pointSize);
-        point.attr("fill", pointColour);
+        point.attr("r", defaultPointSize);
+        point.attr("fill", pointColour)
+        point.style("opacity", 0.7);
     }
 
     //Draw a line on graph
-    function drawGraphLine(x1, y1, x2, y2, lineWidth, lineColour) {
-        if (lineWidth === undefined) lineWidth = 2;
+    function drawGraphLine(x1, y1, x2, y2, lineColour, lineNo) {
         if (lineColour === undefined) lineColour = "black";
-        plotArea.append("line")
+        var lineSegmentGroup = plotArea.select("g#lineSegOf" + lineNo);
+        if (lineSegmentGroup.empty())
+            lineSegmentGroup = plotArea.append("g").attr("id", "lineSegOf" + lineNo);
+
+        lineSegmentGroup.append("line")
             .attr("x1", x1 + x_axisPoints[0])
             .attr("y1", x_axisPoints[1] - y1)
             .attr("x2", x2 + x_axisPoints[0])
             .attr("y2", x_axisPoints[1] - y2)
-            .style("stroke", lineColour).style("stroke-width", lineWidth);
+            .style("stroke", lineColour)
+            .style("stroke-width", defaultLineWidth)
+            .style("opacity", 0.5)
+            .on("mouseover", function() {
+                zoomInLineOf(lineNo);
+                zoomInPointOf(lineNo);
+            })
+            .on("mouseout", function() {
+                zoomOutLineOf(lineNo);
+                zoomOutPointOf(lineNo);
+            });
     }
 
+    function zoomInPointOf(lineNo) {
+        var pointGroup = plotArea.select("g#linePtOf" + lineNo);
+        pointGroup.selectAll("circle")
+            .transition()
+            .style("opacity", 1)
+            .attr("r", defaultPointSize + 3);
+    }
+
+    function zoomOutPointOf(lineNo) {
+        var pointGroup = plotArea.select("g#linePtOf" + lineNo);
+        pointGroup.selectAll("circle")
+            .transition()
+            .style("opacity", 0.7)
+            .attr("r", defaultPointSize);
+    }
+
+    function zoomInLineOf(lineNo) {
+        var lineGroup = plotArea.select("g#lineSegOf" + lineNo);
+        lineGroup.selectAll("line")
+            .transition()
+            .style("opacity", 1)
+            .style("stroke-width", defaultLineWidth + 3);
+    }
+
+    function zoomOutLineOf(lineNo) {
+        var lineGroup = plotArea.select("g#lineSegOf" + lineNo);
+        lineGroup.selectAll("line")
+            .transition()
+            .style("opacity", 0.5)
+            .style("stroke-width", defaultLineWidth);
+    }
     //plotting points from data
     function plotDataPoints() {
         var scaleX = 0.9 * (svgWidth - 2 * x_axisOffset) / maxX;
@@ -167,9 +219,9 @@ function renderGraph() {
         for (var i = 0; i < data.length; i++) {
             var colour = graphLineColours[i % graphLineColours.length];
             for (var j = 0; j < data[i].length; j++) {
-                plotPoint(j * scaleX, data[i][j] * scaleY, undefined, colour);
+                plotPoint(j * scaleX, data[i][j] * scaleY, colour, i);
                 if (j > 0)
-                    drawGraphLine((j - 1) * scaleX, data[i][j - 1] * scaleY, j * scaleX, data[i][j] * scaleY, undefined, colour);
+                    drawGraphLine((j - 1) * scaleX, data[i][j - 1] * scaleY, j * scaleX, data[i][j] * scaleY, colour, i);
             }
         }
     }
