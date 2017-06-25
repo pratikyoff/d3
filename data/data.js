@@ -1,21 +1,12 @@
-var data = data100();
+var data = generateData(4, 100);
 
-//500 x points
-function data500() {
-    return [
-        createRandomNumbers(undefined, undefined, undefined, 500),
-        createRandomNumbers(undefined, undefined, undefined, 500)
-    ];
-}
-
-//100 x points
-function data100() {
-    return [
-        createRandomNumbers(),
-        createRandomNumbers(),
-        createRandomNumbers(),
-        createRandomNumbers()
-    ];
+function generateData(noOfLines, noOfPointsInLine) {
+    if (noOfLines === undefined) noOfLines = 3;
+    var temp = [];
+    for (var i = 0; i < noOfLines; i++) {
+        temp.push(createRandomNumbers(undefined, undefined, undefined, noOfPointsInLine));
+    }
+    return temp;
 }
 
 function createRandomNumbers(startPoint, deviation, positiveDisProb, totalDataPoints) {

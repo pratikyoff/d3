@@ -106,7 +106,7 @@ function renderGraph() {
         y_axisLegend.append("line")
             .attr("x1", y_axisPoints[0])
             .attr("y1", ycor)
-            .attr("x2", svgWidth - x_axisOffset)
+            .attr("x2", svgWidth - x_axisOffset*2)
             .attr("y2", ycor)
             .style("stroke", helperLineColour).style("stroke-width", 1);
         y_axisLegend.append("line")
