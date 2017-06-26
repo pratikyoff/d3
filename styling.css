@@ -3,7 +3,11 @@
     src: url('external/OpenSans-Regular.ttf');
 }
 
-svg * {
+#x_axis text {
+    font-family: svgFont;
+}
+
+#y_axis text {
     font-family: svgFont;
 }
 

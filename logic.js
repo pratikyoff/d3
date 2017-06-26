@@ -1,7 +1,7 @@
 ///////////////Graph
 
 var divDOM = d3.select("body").select("div#svg");
-//divDOM.style("border", "1px solid black");
+divDOM.style("border", "1px solid black");
 
 function renderGraph() {
     divDOM.selectAll("svg").remove();
@@ -25,9 +25,9 @@ function renderGraph() {
     var x_axis = svgGraph.append("g");
     x_axis.attr("id", "x_axis");
     var x_axisPoints = [
-        x_axisOffset + x_axisLegendTextOffset,
+        x_axisOffset + y_axisLegendTextOffset,
         svgHeight - y_axisOffset - x_axisLegendTextOffset,
-        svgWidth - x_axisOffset - x_axisLegendTextOffset,
+        svgWidth - x_axisOffset,
         svgHeight - y_axisOffset - x_axisLegendTextOffset
     ];
     x_axis.append("line")
@@ -69,20 +69,21 @@ function renderGraph() {
             .attr("text-anchor", "middle")
             .attr("fill", "black");
     }
-    var x_axisLegendTextSvg = x_axis.append("g");
-    x_axisLegendTextSvg.append("text")
-        .text(x_axisLegendText)
-        .attr("x", (x_axisPoints[2] - x_axisPoints[0]) / 2)
-        .attr("y", x_axisPoints[1] + x_axisLegendTextOffset)
-        .attr("font-size", axisFontSize);
-
+    if (x_axisLegendTextOffset > 0) {
+        var x_axisLegendTextSvg = x_axis.append("g");
+        x_axisLegendTextSvg.append("text")
+            .text(x_axisLegendText)
+            .attr("x", (x_axisPoints[2] - x_axisPoints[0]) / 2)
+            .attr("y", x_axisPoints[1] + x_axisLegendTextOffset)
+            .attr("font-size", axisFontSize);
+    }
     //y-axis
     var y_axis = svgGraph.append("g");
     y_axis.attr("id", "y_axis");
     var y_axisPoints = [
-        x_axisOffset + x_axisLegendTextOffset,
-        svgHeight - y_axisOffset - x_axisLegendTextOffset,
-        x_axisOffset + x_axisLegendTextOffset,
+        x_axisPoints[0],
+        x_axisPoints[1],
+        x_axisPoints[0],
         y_axisOffset
     ];
     y_axis.append("line")
@@ -106,7 +107,7 @@ function renderGraph() {
         y_axisLegend.append("line")
             .attr("x1", y_axisPoints[0])
             .attr("y1", ycor)
-            .attr("x2", svgWidth - x_axisOffset*2)
+            .attr("x2", svgWidth - x_axisOffset * 2)
             .attr("y2", ycor)
             .style("stroke", helperLineColour).style("stroke-width", 1);
         y_axisLegend.append("line")
@@ -124,6 +125,14 @@ function renderGraph() {
             .attr("text-anchor", "middle")
             .attr("fill", "black");
     }
+    if (y_axisLegendTextOffset > 0) {
+        var y_axisLegendTextSvg = y_axis.append("g");
+        y_axisLegendTextSvg.append("text")
+            .text(y_axisLegendText)
+            .attr("x", y_axisOffset / 2)
+            .attr("y", (y_axisPoints[1] - y_axisPoints[3]) / 2)
+            .attr("font-size", axisFontSize);
+    }
 
     //Graph Points
     var plotArea = svgGraph.append("g");
@@ -131,13 +140,12 @@ function renderGraph() {
 
     //Graph Functions
 
-    //Getting maximum y coordinate
+    //Getting maximum coordinates
     function getMaxElements() {
         for (var i = 0; i < data.length; i++) {
             if (data[i].length > maxX) maxX = data[i].length;
-            for (var j = 0; j < data[i].length; j++) {
-                if (data[i][j] > maxY) maxY = data[i][j];
-            }
+            if (d3.max(data[i]) > maxY)
+                maxY = d3.max(data[i]);
         }
     }
 
@@ -214,8 +222,8 @@ function renderGraph() {
     }
     //plotting points from data
     function plotDataPoints() {
-        var scaleX = 0.9 * (svgWidth - 2 * x_axisOffset) / maxX;
-        var scaleY = 0.9 * (svgHeight - 2 * y_axisOffset) / maxY;
+        var scaleX = 0.9 * (x_axisPoints[2] - x_axisPoints[0]) / maxX;
+        var scaleY = 0.9 * (y_axisPoints[1] - y_axisPoints[3]) / maxY;
         for (var i = 0; i < data.length; i++) {
             var colour = graphLineColours[i % graphLineColours.length];
             for (var j = 0; j < data[i].length; j++) {
