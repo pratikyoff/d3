@@ -1,7 +1,7 @@
 ///////////////Graph
 
 var divDOM = d3.select("body").select("div#svg");
-divDOM.style("border", "1px solid black");
+//divDOM.style("border", "1px solid black");
 
 function renderGraph() {
     divDOM.selectAll("svg").remove();
@@ -137,6 +137,25 @@ function renderGraph() {
     //Graph Points
     var plotArea = svgGraph.append("g");
     plotArea.attr("id", "plotArea");
+    var plotLinesWithD3 = plotArea.append("g").
+    attr("id", "plotLinesWithD3");
+
+    var lfn = d3.line()
+        .x(function(d, i) {
+            var temp = x_axisPoints[0] + i * 0.9 * (x_axisPoints[2] - x_axisPoints[0]) / maxX;
+            temp = Math.round(temp * 100) / 100;
+            return temp;
+        })
+        .y(function(d) {
+            var temp = y_axisPoints[1] - d * 0.9 * (y_axisPoints[1] - y_axisPoints[3]) / maxY;
+            temp = Math.round(temp * 100) / 100;
+            return temp + 10;
+        });
+    plotLinesWithD3.append("path")
+        .attr("d", lfn(data[1]))
+        .style("fill", "none")
+        .attr("stroke-width", defaultLineWidth)
+        .attr("stroke", "black");
 
     //Graph Functions
 
@@ -220,6 +239,11 @@ function renderGraph() {
             .style("opacity", 0.5)
             .style("stroke-width", defaultLineWidth);
     }
+
+    function wrapText(text, fontSize, containerWidth) {
+
+    }
+
     //plotting points from data
     function plotDataPoints() {
         var scaleX = 0.9 * (x_axisPoints[2] - x_axisPoints[0]) / maxX;
